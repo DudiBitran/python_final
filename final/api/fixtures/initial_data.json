@@ -1,0 +1,143 @@
+[
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {"name": "admins"}
+  },
+  {
+    "model": "auth.group",
+    "pk": 2,
+    "fields": {"name": "editors"}
+  },
+  {
+    "model": "auth.group",
+    "pk": 3,
+    "fields": {"name": "users"}
+  },
+  {
+    "model": "auth.user",
+    "pk": 1,
+    "fields": {
+      "username": "adminuser",
+      "email": "admin@example.com",
+      "is_staff": true,
+      "is_superuser": true,
+      "is_active": true,
+      "groups": [1],
+      "password": "!"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 2,
+    "fields": {
+      "username": "user1",
+      "email": "user1@example.com",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "groups": [3],
+      "password": "!"
+    }
+  },
+  {
+    "model": "auth.user",
+    "pk": 3,
+    "fields": {
+      "username": "user2",
+      "email": "user2@example.com",
+      "is_staff": false,
+      "is_superuser": false,
+      "is_active": true,
+      "groups": [3],
+      "password": "!"
+    }
+  },
+  {
+    "model": "api.userprofile",
+    "pk": 1,
+    "fields": {"user": 1, "bio": "Admin profile", "birthdate": null, "created_at": "2024-07-15T12:00:00Z", "updated_at": "2024-07-15T12:00:00Z"}
+  },
+  {
+    "model": "api.userprofile",
+    "pk": 2,
+    "fields": {"user": 2, "bio": "User1 profile", "birthdate": null, "created_at": "2024-07-15T12:05:00Z", "updated_at": "2024-07-15T12:05:00Z"}
+  },
+  {
+    "model": "api.userprofile",
+    "pk": 3,
+    "fields": {"user": 3, "bio": "User2 profile", "birthdate": null, "created_at": "2024-07-15T12:10:00Z", "updated_at": "2024-07-15T12:10:00Z"}
+  },
+  {
+    "model": "api.post",
+    "pk": 1,
+    "fields": {
+      "author": 1,
+      "title": "First Article",
+      "text": "This is the first article.",
+      "status": "published",
+      "created_at": "2024-07-15T12:00:00Z",
+      "updated_at": "2024-07-15T12:00:00Z"
+    }
+  },
+  {
+    "model": "api.post",
+    "pk": 2,
+    "fields": {
+      "author": 1,
+      "title": "Second Article",
+      "text": "This is the second article.",
+      "status": "published",
+      "created_at": "2024-07-15T13:00:00Z",
+      "updated_at": "2024-07-15T13:00:00Z"
+    }
+  },
+  {
+    "model": "api.comment",
+    "pk": 1,
+    "fields": {
+      "author": 2,
+      "post": 1,
+      "text": "Great article!",
+      "created_at": "2024-07-15T14:00:00Z",
+      "updated_at": "2024-07-15T14:00:00Z",
+      "reply_to": null
+    }
+  },
+  {
+    "model": "api.comment",
+    "pk": 2,
+    "fields": {
+      "author": 3,
+      "post": 1,
+      "text": "Very informative.",
+      "created_at": "2024-07-15T14:05:00Z",
+      "updated_at": "2024-07-15T14:05:00Z",
+      "reply_to": null
+    }
+  },
+  {
+    "model": "api.comment",
+    "pk": 3,
+    "fields": {
+      "author": 2,
+      "post": 2,
+      "text": "Thanks for sharing!",
+      "created_at": "2024-07-15T14:10:00Z",
+      "updated_at": "2024-07-15T14:10:00Z",
+      "reply_to": null
+    }
+  },
+  {
+    "model": "api.comment",
+    "pk": 4,
+    "fields": {
+      "author": 3,
+      "post": 2,
+      "text": "I learned a lot.",
+      "created_at": "2024-07-15T14:15:00Z",
+      "updated_at": "2024-07-15T14:15:00Z",
+      "reply_to": null
+    }
+  }
+] 

@@ -1,0 +1,6 @@
+/* App.css - global styles for the React app */
+body {
+  background: #f8fafc;
+  margin: 0;
+  font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+} 
