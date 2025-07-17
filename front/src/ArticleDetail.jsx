@@ -118,7 +118,7 @@ function ArticleDetail() {
       </div>
       {article.author && (
         <div style={{ marginBottom: 16, color: '#666' }}>
-          By: {article.author.user?.username || 'Unknown'}
+          By: {article.author?.username || 'Unknown'}
         </div>
       )}
       <h3>Comments ({comments.length})</h3>

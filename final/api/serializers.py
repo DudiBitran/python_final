@@ -73,9 +73,19 @@ class UserProfileSerializer(ModelSerializer):
 
  
 class PostSerializer(ModelSerializer):
+    author = serializers.SerializerMethodField(read_only=True)
+
     class Meta:
         model = Post
-        fields = "__all__"
+        fields = '__all__'
+
+    def get_author(self, obj):
+        if obj.author and hasattr(obj.author, 'user'):
+            return {
+                "id": obj.author.user.id,
+                "username": obj.author.user.username
+            }
+        return None
 
 
 class TagSerializer(ModelSerializer):

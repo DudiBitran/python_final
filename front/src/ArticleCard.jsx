@@ -12,7 +12,7 @@ function ArticleCard({ article, onClick }) {
       </Card.Body>
       <Card.Footer className="text-muted">
         {article.author && (
-          <small>By: {article.author.user?.username || 'Unknown'}</small>
+          <small>By: {article.author?.username || 'Unknown'}</small>
         )}
       </Card.Footer>
     </Card>

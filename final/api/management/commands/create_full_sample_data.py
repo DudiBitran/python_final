@@ -1,46 +1,49 @@
 from django.core.management.base import BaseCommand
 from django.contrib.auth.models import User
-from django.utils import timezone
 from api.models import UserProfile, Post, Comment, Tag
-from datetime import date
 
 class Command(BaseCommand):
-    help = 'Create sample data for the blog application'
+    help = 'Create all sample data: users, passwords, profiles, tags, articles, comments.'
 
     def handle(self, *args, **options):
-        self.stdout.write('Creating sample data...')
-        
-        # Create tags
-        tags = []
-        tag_names = ['Technology', 'AI', 'Trends', 'Environment', 'Climate', 'Action', 'Health', 'Nutrition', 'Lifestyle']
-        for tag_name in tag_names:
-            tag, created = Tag.objects.get_or_create(name=tag_name)
-            tags.append(tag)
-            if created:
-                self.stdout.write(f'Created tag: {tag_name}')
-        
-        # Create additional users if they don't exist
+        self.stdout.write('Creating full sample data...')
+
+        # 1. Create users (superusers and regular)
         users_data = [
-            {'username': 'john_doe', 'email': 'john@example.com', 'bio': 'Tech journalist and AI enthusiast.'},
-            {'username': 'jane_smith', 'email': 'jane@example.com', 'bio': 'Environmental activist and writer.'},
-            {'username': 'mike_wilson', 'email': 'mike@example.com', 'bio': 'Health coach and nutrition expert.'},
+            {'username': 'adminuser', 'email': 'adminuser@example.com', 'password': 'AdminPass123', 'is_staff': True, 'is_superuser': True, 'bio': 'Adminuser profile'},
+            {'username': 'admin', 'email': 'admin@example.com', 'password': 'AdminPass123', 'is_staff': True, 'is_superuser': True, 'bio': 'Admin profile'},
+            {'username': 'user1', 'email': 'user1@example.com', 'password': 'UserPass123', 'is_staff': False, 'is_superuser': False, 'bio': 'User1 profile'},
+            {'username': 'user2', 'email': 'user2@example.com', 'password': 'UserPass123', 'is_staff': False, 'is_superuser': False, 'bio': 'User2 profile'},
+            {'username': 'john_doe', 'email': 'john@example.com', 'password': 'UserPass123', 'is_staff': False, 'is_superuser': False, 'bio': 'Tech journalist and AI enthusiast.'},
+            {'username': 'jane_smith', 'email': 'jane@example.com', 'password': 'UserPass123', 'is_staff': False, 'is_superuser': False, 'bio': 'Environmental activist and writer.'},
+            {'username': 'mike_wilson', 'email': 'mike@example.com', 'password': 'UserPass123', 'is_staff': False, 'is_superuser': False, 'bio': 'Health coach and nutrition expert.'},
         ]
-        
-        for user_data in users_data:
+        user_objs = {}
+        for u in users_data:
             user, created = User.objects.get_or_create(
-                username=user_data['username'],
-                defaults={'email': user_data['email']}
+                username=u['username'],
+                defaults={'email': u['email'], 'is_staff': u['is_staff'], 'is_superuser': u['is_superuser']}
             )
-            if created:
-                user.set_password('password123')
-                user.save()
-                profile, profile_created = UserProfile.objects.get_or_create(
-                    user=user,
-                    defaults={'bio': user_data['bio']}
-                )
-                self.stdout.write(f'Created user: {user.username}')
-        
-        # Create additional posts (10 articles by the two superusers)
+            user.set_password(u['password'])
+            user.is_staff = u['is_staff']
+            user.is_superuser = u['is_superuser']
+            user.save()
+            user_objs[u['username']] = user
+            profile, _ = UserProfile.objects.get_or_create(user=user, defaults={'bio': u['bio']})
+            self.stdout.write(f"✅ User: {u['username']} (superuser: {u['is_superuser']})")
+
+        # 2. Create tags
+        tag_names = [
+            'Technology', 'AI', 'Trends', 'Environment', 'Climate', 'Action', 'Health', 'Nutrition', 'Lifestyle',
+            'Work', 'Travel', 'Programming', 'Python', 'Data Science', 'Wellness', 'Business', 'Marketing', 'Finance', 'Investing'
+        ]
+        tag_objs = {}
+        for tag_name in tag_names:
+            tag, _ = Tag.objects.get_or_create(name=tag_name)
+            tag_objs[tag_name] = tag
+            self.stdout.write(f'✅ Tag: {tag_name}')
+
+        # 3. Create 10 articles by adminuser and admin
         posts_data = [
             {
                 'title': 'The Rise of Artificial Intelligence',
@@ -113,7 +116,7 @@ class Command(BaseCommand):
                 'status': 'published'
             }
         ]
-        
+        post_objs = {}
         for post_data in posts_data:
             try:
                 author = UserProfile.objects.get(user__username=post_data['author_username'])
@@ -126,25 +129,31 @@ class Command(BaseCommand):
                     }
                 )
                 if created:
-                    # Add tags
                     for tag_name in post_data['tags']:
-                        tag = Tag.objects.get(name=tag_name)
+                        tag = tag_objs[tag_name]
                         post.tags.add(tag)
-                    self.stdout.write(f'Created post: {post.title}')
+                    self.stdout.write(f'✅ Post: {post.title}')
+                post_objs[post.title] = post
             except UserProfile.DoesNotExist:
                 self.stdout.write(f'User {post_data["author_username"]} not found, skipping post')
-        
-        # Create additional comments (real-world context)
+
+        # 4. Create sample comments
         comments_data = [
-            {'post_title': 'The Rise of Artificial Intelligence', 'author_username': 'jane_smith', 'text': 'Fascinating read! AI is truly changing the world.'},
-            {'post_title': 'The Rise of Artificial Intelligence', 'author_username': 'mike_wilson', 'text': 'Great overview of current AI trends.'},
+            {'post_title': 'The Rise of Artificial Intelligence', 'author_username': 'user1', 'text': 'Fascinating read! AI is truly changing the world.'},
+            {'post_title': 'The Rise of Artificial Intelligence', 'author_username': 'user2', 'text': 'Great overview of current AI trends.'},
             {'post_title': 'Climate Change: What Can We Do?', 'author_username': 'john_doe', 'text': 'Very informative. Everyone should read this.'},
             {'post_title': 'Healthy Eating for Busy People', 'author_username': 'jane_smith', 'text': 'Loved the quick recipes!'},
+            {'post_title': 'The Future of Remote Work', 'author_username': 'mike_wilson', 'text': 'Remote work tips are so useful!'},
+            {'post_title': 'Traveling on a Budget', 'author_username': 'user1', 'text': 'Great travel tips!'},
+            {'post_title': 'Mastering Python for Data Science', 'author_username': 'user2', 'text': 'Python is awesome for data science.'},
+            {'post_title': 'Mindfulness and Meditation', 'author_username': 'john_doe', 'text': 'Mindfulness really helps me focus.'},
+            {'post_title': 'Building Your Personal Brand Online', 'author_username': 'jane_smith', 'text': 'Branding is so important these days.'},
+            {'post_title': 'A Beginner’s Guide to Investing', 'author_username': 'mike_wilson', 'text': 'Investing basics explained well.'},
+            {'post_title': 'Sustainable Living: Small Changes, Big Impact', 'author_username': 'user1', 'text': 'Every small change really does count!'},
         ]
-        
         for comment_data in comments_data:
             try:
-                post = Post.objects.get(title=comment_data['post_title'])
+                post = post_objs[comment_data['post_title']]
                 author = UserProfile.objects.get(user__username=comment_data['author_username'])
                 comment, created = Comment.objects.get_or_create(
                     post=post,
@@ -152,8 +161,8 @@ class Command(BaseCommand):
                     text=comment_data['text']
                 )
                 if created:
-                    self.stdout.write(f'Created comment on "{post.title}" by {author.user.username}')
-            except (Post.DoesNotExist, UserProfile.DoesNotExist):
+                    self.stdout.write(f'✅ Comment on "{post.title}" by {author.user.username}')
+            except (KeyError, UserProfile.DoesNotExist):
                 self.stdout.write(f'Post or user not found, skipping comment')
-        
-        self.stdout.write(self.style.SUCCESS('Sample data created successfully!')) 
+
+        self.stdout.write(self.style.SUCCESS('Full sample data created successfully!')) 

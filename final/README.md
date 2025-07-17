@@ -71,24 +71,39 @@ A Django REST API for a blogging system with articles, comments, JWT authenticat
    python manage.py migrate
    ```
 
-7. **Load initial data**
-   ```bash
-   python manage.py loaddata api/fixtures/initial_data.json
-   ```
+## Initial Data Setup (Recommended)
 
-8. **Set up user passwords**
-   ```bash
-   python manage.py setup_passwords
-   ```
+To set up all sample users, profiles, articles, tags, and comments in one go, use the unified management command:
 
-9. **Run the development server**
-   ```bash
-   python manage.py runserver
-   ```
+```bash
+python manage.py create_full_sample_data
+```
 
-10. **Access the application**
-    - Django Admin: http://127.0.0.1:8000/admin/
-    - API Interface: http://127.0.0.1:8000/api/
+This will:
+- Create all users (admin, regular users)
+- Set their passwords
+- Create user profiles
+- Create tags, articles, and comments
+- Ensure all relationships are correct
+
+**Default users and passwords:**
+- adminuser / AdminPass123
+- admin / AdminPass123
+- user1 / UserPass123
+- user2 / UserPass123
+- john_doe / UserPass123
+- jane_smith / UserPass123
+- mike_wilson / UserPass123
+
+**Summary Table:**
+
+| Step                | Command                                      |
+|---------------------|----------------------------------------------|
+| Apply migrations    | `python manage.py migrate`                   |
+| Create sample data  | `python manage.py create_full_sample_data`   |
+| Run server          | `python manage.py runserver`                 |
+
+---
 
 ## API Endpoints
 ### Authentication
