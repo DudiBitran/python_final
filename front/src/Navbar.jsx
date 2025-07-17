@@ -12,29 +12,44 @@ function AppNavbar() {
   };
 
   return (
-    <Navbar bg="primary" variant="dark" expand="md" className="mb-4 shadow-sm">
-      <Container>
-        <Navbar.Brand as={NavLink} to="/">
-          My Articles
+    <Navbar
+      expand="md"
+      className="mb-4 navbar-gradient shadow-lg py-2"
+      style={{ minHeight: 70 }}
+      variant="dark"
+    >
+      <Container fluid>
+        <Navbar.Brand
+          as={NavLink}
+          to="/"
+          className="mx-auto fw-bold fs-3 text-white text-center"
+          style={{ letterSpacing: '0.08em' }}
+        >
+          <span style={{ fontWeight: 900, textShadow: '0 2px 8px #0002' }}>My Articles</span>
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="main-navbar-nav" />
-        <Navbar.Collapse id="main-navbar-nav">
-          <Nav className="ms-auto">
-            <Nav.Link as={NavLink} to="/" end>
+        <Navbar.Toggle aria-controls="main-navbar-nav" className="border-0" />
+        <Navbar.Collapse id="main-navbar-nav" className="justify-content-center">
+          <Nav className="mx-auto align-items-center gap-2">
+            <Nav.Link as={NavLink} to="/" end className="nav-pill text-white px-4">
               Home
             </Nav.Link>
             {!user && (
               <>
-                <Nav.Link as={NavLink} to="/login">
+                <Nav.Link as={NavLink} to="/login" className="nav-pill text-white px-4">
                   Login
                 </Nav.Link>
-                <Nav.Link as={NavLink} to="/register">
+                <Nav.Link as={NavLink} to="/register" className="nav-pill text-white px-4">
                   Register
                 </Nav.Link>
               </>
             )}
             {user && (
-              <Button variant="outline-light" onClick={handleLogout} className="ms-2">
+              <Button
+                variant="light"
+                onClick={handleLogout}
+                className="ms-2 nav-pill px-4 fw-bold text-primary shadow-sm"
+                style={{ borderRadius: 999, fontWeight: 700 }}
+              >
                 Logout
               </Button>
             )}
