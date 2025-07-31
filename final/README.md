@@ -9,16 +9,45 @@ A Django REST API for a blogging system with articles, comments, JWT authenticat
 - JWT-based authentication
 - Browsable API interface
 - Search/filter articles by title, content, tags, author
-- Initial data: 2 users, 2 articles, 2 comments per article
+- User profiles and role-based permissions
+- Tag system for articles
+- Initial data: 7 users, multiple articles, and comments
 
 ## Technologies
 
-- Django
-- Django REST Framework
-- djangorestframework-simplejwt
-- django-filter
-- django-cors-headers
-- python-dotenv
+- Django 5.2.3
+- Django REST Framework 3.16.0
+- djangorestframework-simplejwt 5.5.0
+- django-filter 25.1
+- django-cors-headers 4.7.0
+- python-dotenv 1.1.1
+- PostgreSQL (psycopg2-binary 2.9.10)
+
+## Quick Start
+
+If you want to get up and running quickly:
+
+1. **Set up database and environment**
+   ```bash
+   # Create .env file with your PostgreSQL credentials
+   echo "DB_NAME=blog
+   DB_USER=your_username
+   DB_PASSWORD=your_password
+   DB_HOST=localhost
+   DB_PORT=5432" > .env
+   ```
+
+2. **Install and setup**
+   ```bash
+   pip install -r requirements.txt
+   python manage.py migrate
+   python manage.py create_full_sample_data
+   python manage.py runserver
+   ```
+
+3. **Access the API**
+   - API: http://localhost:8000/api/
+   - Admin: http://localhost:8000/admin/ (adminuser/AdminPass123)
 
 ## Setup Instructions
 
@@ -139,6 +168,24 @@ This will:
 - `POST /api/articles/<id>/comments/` — Post a comment (authenticated users)
 - `DELETE /api/comments/<id>/` — Delete a comment (admin only)
 
+## Development
+
+### Running Tests
+```bash
+python manage.py test
+```
+
+### Creating a Superuser
+```bash
+python manage.py createsuperuser
+```
+
+### Available Management Commands
+- `python manage.py create_full_sample_data` - Create all sample data
+- `python manage.py create_sample_data` - Create basic sample data
+- `python manage.py setup_passwords` - Set passwords for existing users
+- `python manage.py clean_orphaned_comments` - Clean up orphaned comments
+
 ## Notes
 
 - **Superuser accounts:**
@@ -153,6 +200,7 @@ This will:
 - **Database:** PostgreSQL (configured in `final/settings.py`)
 - **API Testing:** Use the browsable API at `/api/` for easy testing
 - **Admin Interface:** Access at `/admin/` with any superuser credentials
+- **CORS:** Enabled for frontend integration (localhost:5173)
 
 ---
 
